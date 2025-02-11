@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Игра: Начисление очков</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            color: #333;
+        }
+        #startButton {
+            padding: 20px 40px;
+            font-size: 24px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        #startButton:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        #score {
+            margin-top: 20px;
+            font-size: 32px;
+            font-weight: bold;
+        }
+        #timer {
+            margin-top: 10px;
+            font-size: 18px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>Игра: Начисление очков</h1>
+    
+    <!-- Кнопка для начала начисления очков -->
+    <button id="startButton">Начать начисление</button>
+
+    <!-- Блок для отображения очков -->
+    <div id="score">Очки: 0</div>
+
+    <!-- Блок для отображения таймера -->
+    <div id="timer"></div>
+
+    <script>
+        // Переменные для хранения очков и состояния игры
+        let score = 0;
+        let isRunning = false;
+        let endTime = null;
+
+        // Находим элементы на странице
+        const startButton = document.getElementById('startButton');
+        const scoreDisplay = document.getElementById('score');
+        const timerDisplay = document.getElementById('timer');
+
+        // Функция для начала начисления очков
+        startButton.addEventListener('click', () => {
+            if (!isRunning) {
+                isRunning = true;
+                startButton.disabled = true; // Блокируем кнопку
+                endTime = Date.now() + 2 * 60 * 60 * 1000; // 2 часа в миллисекундах
+
+                // Запускаем таймер
+                const interval = setInterval(() => {
+                    const now = Date.now();
+                    const remainingTime = endTime - now;
+
+                    if (remainingTime <= 0) {
+                        clearInterval(interval); // Останавливаем таймер
+                        isRunning = false;
+                        timerDisplay.innerText = "Время вышло!";
+                    } else {
+                        // Обновляем таймер
+                        const hours = Math.floor(remainingTime / (1000 * 60 * 60));
+                        const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+                        timerDisplay.innerText = `Осталось времени: ${hours} ч ${minutes} мин`;
+
+                        // Начисляем очки (например, 1 очко каждую секунду)
+                        score += 1;
+                        scoreDisplay.innerText = `Очки: ${score}`;
+                    }
+                }, 1000); // Обновляем каждую секунду
+            }
+        });
+    </script>
+</body>
+</html>
